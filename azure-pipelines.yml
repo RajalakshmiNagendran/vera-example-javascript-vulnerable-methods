@@ -1,0 +1,51 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - feature
+
+pool:
+  name: 'azureagent'
+
+steps:
+# Step 1: Package Binaries
+- task: CmdLine@2
+  displayName: Package Artifacts
+  inputs:
+    script: |
+      curl -fsS https://tools.veracode.com/veracode-cli/install | sh
+      ./veracode package --source $(Build.SourcesDirectory) --output $(Build.ArtifactStagingDirectory)/artifacts --trust
+  env: 
+      VERACODE_API_KEY_ID: $(myVeracodeId)
+      VERACODE_API_KEY_SECRET: $(myVeracodeSecret)
+
+# Step 2: Archive Packaged Binaries
+- task: ArchiveFiles@2
+  displayName: Archive Packaged Binaries
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/artifacts'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+# Publish (upload) a file or directory as a named artifact for the current run.
+- task: PublishPipelineArtifact@1
+  inputs:
+    artifactName: 'build-output'
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    publishLocation: 'pipeline'
+
+# Download build and pipeline artifacts.
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'current'
+    artifactName: 'build-output'
+    targetPath: '$(Pipeline.Workspace)'
+
+# Step 5: Scan the ZIP File with Veracode
+- task: CmdLine@2
+  displayName: Veracode Pipeline Scan
+  inputs:
+    script: |
+      curl -sSL  https://sca-downloads.veracode.com/ci.sh | sh -s -- scan $(Pipeline.Workspace) --allow-dirty
