@@ -1,2 +1,2 @@
 # Prevent scanning 'devDependencies' for an NPM project
-scope: development
+scope: production
