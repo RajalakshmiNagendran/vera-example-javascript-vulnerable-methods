@@ -48,4 +48,4 @@ steps:
   displayName: Veracode Pipeline Scan
   inputs:
     script: |
-      curl -sSL https://sca-downloads.veracode.com/ci.sh | sh -s scan --url https://github.com/RajalakshmiNagendran/vera-example-javascript-vulnerable-methods --ref dev
+      curl -sSL https://sca-downloads.veracode.com/ci.sh | sh -s scan --url $(Build.SourceBranch) --ref dev
