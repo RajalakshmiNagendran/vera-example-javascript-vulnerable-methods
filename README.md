@@ -1,3 +1,4 @@
+This project has taken as an example for executing NPM SCA scan.
 # [:] Example node project with vulnerable methods
 
 A node project to demonstrate srcclr agent's vulnerable methods feature for JavaScript
