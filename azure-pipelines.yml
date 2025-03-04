@@ -45,4 +45,5 @@ steps:
   displayName: Veracode SCA Scan
   inputs:
     script: |
+      export SCA_TOKEN= $(SRCCLR_API_TOKEN)
       curl -sSL https://sca-downloads.veracode.com/ci.sh | SCAN_DIR="$(Pipeline.Workspace)" sh
