@@ -11,4 +11,4 @@ steps:
   displayName: Veracode SCA Scan
   inputs:
     script: |
-      curl -sSL https://sca-downloads.veracode.com/ci.sh | sh -s -- scan --allow-dirty 
+      curl -sSL https://sca-downloads.veracode.com/ci.sh | sh -s -- scan --allow-dirty --no-upload
