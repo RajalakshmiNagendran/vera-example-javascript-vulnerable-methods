@@ -1,8 +1,5 @@
 trigger:
-  branches:
-    include:
-      - dev
-      - feature
+- dev
 
 pool:
   name: 'azureagent'
@@ -45,7 +42,7 @@ steps:
 
 # Step 5: Scan the ZIP File with Veracode
 - task: CmdLine@2
-  displayName: Veracode Pipeline Scan
+  displayName: Veracode SCA Scan
   inputs:
     script: |
-      curl -sSL https://sca-downloads.veracode.com/ci.sh | sh -s scan --url https://github.com/RajalakshmiNagendran/vera-example-javascript-vulnerable-methods --ref dev
+      curl -sSL https://sca-downloads.veracode.com/ci.sh | SCAN_DIR="$(Pipeline.Workspace)" sh
